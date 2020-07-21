@@ -143,3 +143,93 @@ abc[end]
 # use ranges to make tuple
 (1:20...,)
 [1:20...]
+# set different increments
+(0:5:20...,)
+(20:-5:-20...,)
+(0.5:10...,)
+# use collect() to turn ranges to array
+collect(0.5:0.5:10)
+
+
+## ARRAYS
+[1, 2, 3]
+Float32[1, 2, 3, 4]
+# matrices
+[1 2 3; 4 5 6; 7 8 9]
+# matrix constructors
+zeros(Int, 2)
+zeros(Float64, 3)
+ones(2)
+ones(Int, 2)
+ones(Int, 3, 4)
+trues(2)
+falses(3, 3)
+rand(Int, 4, 2)
+rand(Char, 5, 5)
+fill(42, 2, 4)
+# accessing values
+arr1d = rand(5)
+arr1d[5]
+arr2d = rand(5, 5)
+arr2d[4, 1]
+arr2d[1:3, 3:5] # slices
+arr2d[:, 3:5]
+# assign values
+arr2d[1, 1] = 0.0
+
+
+## ITERATIONS
+for person in ["Alison", "James", "Cohen"]
+    println("Hello $person")
+end
+
+people = ["Alison", "James", "Cohen"]
+
+for i in eachindex(people)
+    println("$i. $(people[i])")
+end
+
+
+## MUTATING ARRAYS
+arr = [1, 2, 3]
+push!(arr, 4)
+arr
+push!(arr, 5, 6, 7)
+arr
+# the ! notation is a convention to warn that functing is modify the data
+pop!(arr) # remove last
+deleteat!(arr, 3) # remove at index
+
+# when arrays are assigned to a variable, it is not a copy
+arr = [1,2,3]
+arr2 = arr
+pop!(arr2) # this will modify both arr and arr2
+arr == arr2 #true
+
+# use copy() to create new binding
+arr2 = copy(arr)
+pop!(arr2)
+arr == arr2 #false
+
+
+## COMPREHENSIONS
+[x += 1 for x = 1:5]
+Float64[x += 1 for x = 1:5]
+[x += y for x = 1:5, y = 11:15] # 5x5 matrix
+[x += 1 for x = 1:10 if x/2 > 3]
+
+
+## GENERATORS
+# defined just like comprehensions but without square brackets
+(x += 1 for x = 1:10)
+
+# benchmarks vs comprehensions
+@time for i in [x^3 for x=1:1_000_000] #comp
+    i >= 1_000 && break
+    println(i)
+end
+
+@time for i in (x^3 for x=1:1_000_000) # gen
+    i >= 1_000 && break
+    println(i)
+end
